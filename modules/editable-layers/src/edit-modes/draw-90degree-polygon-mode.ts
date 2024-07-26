@@ -98,7 +98,29 @@ export class Draw90DegreePolygonMode extends GeoJsonEditMode {
     super.handlePointerMove(event, props);
   }
 
+  _isOverLapping(event: ClickEvent,props: ModeProps<FeatureCollection>): boolean {
+    let overlappingLines = false;
+    const clickSequence = this.getClickSequence();
+    if (clickSequence.length > 2 && props.modeConfig && props.modeConfig.preventOverlappingLines) {
+      const currentLine = turfLineString([
+        clickSequence[clickSequence.length - 1],
+        event.mapCoords
+      ]);
+      const otherLines = turfLineString([...clickSequence.slice(0, clickSequence.length - 1)]);
+      const intersectingPoints = lineIntersect(currentLine, otherLines);
+      if (intersectingPoints.features.length > 0) {
+        overlappingLines = true;
+      }
+    }
+    return overlappingLines;
+  }
+
+  /* eslint complexity: ["error", 12] */
   handleClick(event: ClickEvent, props: ModeProps<FeatureCollection>) {
+    if (this._isOverLapping(event, props)) {
+      return;
+    }
+
     const {picks} = event;
     const tentativeFeature = this.getTentativeGuide(props);
     this.addClickSequence(event);

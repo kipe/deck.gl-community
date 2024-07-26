@@ -73,6 +73,11 @@ Callback parameters
 
 User can draw a new `Polygon` feature with 90 degree corners (right angle) by clicking positions to add then closing the polygon (or double-clicking). After clicking the 2 points, the draw mode guides/allows to have right angle polygon.
 
+The following options can be provided in the `modeConfig` object:
+
+- `preventOverlappingLines` (optional): `boolean`
+  - If `true`, it will not be possible to add a polygon point if the current line overlaps any other lines on the same polygon.
+
 [Source code](https://github.com/visgl/deck.gl-community/blob/master/modules/editable-layers/src/edit-modes/draw-90degree-polygon-mode.ts)
 
 ## DrawPolygonByDraggingMode
